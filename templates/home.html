@@ -1,0 +1,232 @@
+{% extends "template.html" %}
+{% block content %}
+
+	<title>Pasar Malam Dublin</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BR9L8C0659"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BR9L8C0659');
+</script>
+
+
+
+<meta property="og:site_name" content="Pasar Malam Dublin">
+<meta property="og:title" content="Pasar Malam Dublin" />
+<meta property="og:description" content="Online platform for homemade Malaysian food market in Dublin" />
+<meta property="og:image" itemprop="image" content="https://res.cloudinary.com/theo-courant/image/upload/f_auto,w_1920/images/headers/bangkok-shopping-night-market.jpg">
+<meta property="og:type" content="website" />
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="300">
+<meta property="og:image:height" content="300">
+<meta property="og:url" content="http://www.pasarmalamdublin.com">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="alert alert-primary" role="alert" style="margin:0">
+  Welcome to Pasar Malam Dublin! Start selling online with free vendor registration.<a href="/register" class="alert-link"> Register Here</a>
+</div>
+
+
+  <!-- Homepage banner -->
+  <div class="w3-display-container w3-center">
+    <div  style="background-image: url('https://res.cloudinary.com/theo-courant/image/upload/f_auto,w_1920/images/headers/bangkok-shopping-night-market.jpg'); height: 400px;opacity: 0.8;background-size: cover;background-position: center center;">
+	  </div>
+	    <div class="w3-display-middle w3-container w3-text-white w3-padding-50">
+	    
+	 				 <h1>Homemade Night Market <sup>🇲🇾 🇮🇪</sup></h1>
+	      
+						{% if current_user.is_authenticated %}
+						<h1>Hi, <span style="text-transform:uppercase;color: gold">{{current_user.username}}</span></h1>
+						<p>Start selling. It's free.</p>
+						{% else %}
+
+						{% endif %}   
+
+	        <a href="/create"><button class="w3-button w3-black w3-padding-large">Post something!</button></a>
+	    </div>
+  </div>
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+      <div class="album py-3 bg-light">
+        <div class="container">
+				<h1 style="margin-top:0"><b>Recent posts near you..<br>🍗🌭🥙 🍛🍚</b></h1>
+
+			   <nav aria-label="Page navigation example">
+			     <ul class="pagination justify-content-center">
+			       {% for page_num in blog_posts.iter_pages() %}
+			          {% if blog_posts.page == page_num %}
+			          <li class="page-item disabled">
+			            <a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+			          </li>
+			          {% else %}	
+			            <li class="page-item"><a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+			          {% endif %}
+			      {% endfor %}
+			    </ul>
+			    </nav>    
+
+          <div class="row">
+
+						 {% for post in blog_posts.items %}
+			            <div class="col-md-4">
+
+			              <div class="card mb-4 box-shadow">
+
+
+			              	<small style="background-color:#28282B;color:white;font-family: mono;">Published: {{post.date.strftime('%Y-%m-%d')}}</small>
+
+											<a href="{{ url_for('blog_post', blog_post_id=post.id) }}">
+											    <div  style="background-image: url('https://storage.googleapis.com/pasarmalamdublin/blog_pics/{{post.picture}}'); min-height: 300px;background-size: cover;background-position: center center;">
+												  </div>
+											</a>
+
+			              	
+			                <div class="card-body">
+				                <h2 style="text-transform: uppercase;font-size: 1.7em;text-shadow: 2px 2px 0 #bcbcbc, 2px 2px 0 #9c9c9c;">{{ post.title}}</h2>
+
+				                  <p class="card-text"><pre style=" white-space: pre-wrap;">{{post.text[:15]}}...<a href="{{ url_for('blog_post', blog_post_id=post.id) }}"><button type="button" class="btn btn-sm btn-outline-secondary">Read More</button></a></pre></p>
+
+
+
+
+
+				                <a href="https://wa.me/{{post.contact}}?text=From%20PasarMalamDublin. {{post.title}}" target="blank">
+
+												  <button class="btn btn-secondary startchat" type="button">Start Chat <i class="fa fa-whatsapp" style="font-size:20px;color:#25d366"></i></button>
+			                  </a>
+
+												  <ul class="list-group list-group-flush">
+														<li class="list-group-item">By:
+															<a href="{{ url_for('user_posts',username=post.author.username) }}" class="btn btn-sm btn-secondary" style="box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);">👤{{post.author.username }}</a></li>												 												 
+												    <li class="list-group-item">📍 {{post.location}}</li>
+												  </ul>
+
+			                </div>
+				                <a href="{{ url_for('blog_post', blog_post_id=post.id) }}" target="blank">
+												  <button class="btn btn-primary" type="button">View Comments</button>
+			                  </a>                  
+			                  
+<span id="likes-count-{{post.id}}">{{ post.likes|length }}
+
+        {% if post.likes|length > 0 %}
+        <i class="fas fa-thumbs-up"></i>
+        {% else %}
+        <i class="far fa-thumbs-up"></i>
+        {% endif %}
+</span> 
+
+
+
+
+
+
+
+			              </div>
+			            </div>
+			   {% endfor %}
+				<!-- END BLOG ENTRIES -->
+
+
+
+          </div>
+        </div>
+
+   <nav aria-label="Page navigation example">
+     	See more posts..
+     <ul class="pagination justify-content-center">
+       {% for page_num in blog_posts.iter_pages() %}
+          {% if blog_posts.page == page_num %}
+          <li class="page-item disabled">
+            <a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+          </li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+          {% endif %}
+      {% endfor %}
+    </ul>
+    </nav>
+
+
+
+      </div>
+
+
+
+  <!-- register banner -->
+  <div class="w3-display-container w3-center">
+    <div  style="background-image: url('https://a.cdn-hotels.com/gdcs/production177/d1795/2c32e053-392e-418f-b29f-b670e30399e5.jpg'); height: 400px;opacity: 0.7;background-size: cover;background-position: center center;">
+	  </div>
+	    <div class="w3-display-middle w3-container w3-text-white w3-padding-50">
+	    
+	 				 <h1>Interested to be a vendor?</h1>
+	 				 <p>Start selling for free.</p>
+	      
+	        <a href="/register"><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Register Now</button></a>
+	    </div>
+  </div>
+
+
+  <!-- rider banner -->
+  <div class="w3-display-container w3-center">
+    <div  style="background-image: url('https://lede-admin.blockclubchicago.org/wp-content/uploads/sites/5/2020/05/COVIDFEATURES-052920-ColinBoyle-3688.jpg?crop=0px%2C78px%2C3461px%2C1950px&resize=1200%2C675&w=1800'); height: 400px;opacity: 0.7;background-size: cover;background-position: center center;">
+	  </div>
+	    <div class="w3-display-middle w3-container w3-text-white w3-padding-50">
+	    
+	 				 <h1>Get Paid to Deliver</h1>
+	 				 <p>Become a rider and start earning.</p>
+
+
+	        <a href="https://wa.me/+353830674984?text=From%20PasarMalamDublin. I want to ask about Rider Job" target="blank"><button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Ask Me Anything <i class="fa fa-whatsapp" style="font-size:20px;color:#25d366"></i></button></a>
+	    </div>
+  </div>
+<br>
+
+
+
+<style type="text/css">
+	
+.startchat{
+	width: 100%;padding: 20px 0;background-color: #075e54;
+}
+
+.startchat:hover{
+	background-color: black;
+	transition: 1s;
+}
+
+
+	.card:hover {
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.4);
+  transform: scale(1.01);
+}
+	.card {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s;
+}
+</style>
+{% endblock %}

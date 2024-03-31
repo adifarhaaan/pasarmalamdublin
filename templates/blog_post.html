@@ -1,0 +1,212 @@
+{% extends "template.html" %}
+{% block content %}
+  <title>Post</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BR9L8C0659"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BR9L8C0659');
+</script>
+
+<meta property="og:site_name" content="Pasar Malam Dublin">
+<meta property="og:title" content="{{post.title}}" />
+<meta property="og:description" content="{{post.text}}" />
+<meta property="og:image" itemprop="image" content="https://storage.googleapis.com/pasarmalamdublin/blog_pics/{{post.picture}}">
+<meta property="og:type" content="website" />
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="300">
+<meta property="og:image:height" content="300">
+<meta property="og:url" content="http://www.pasarmalamdublin.com">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+<div class="jumbotron">
+
+  <div class="loginform">
+
+    <div style="background-color:#28282B;color:white;font-family: mono;">Published: {{post.date.strftime('%Y-%m-%d')}}</div>
+
+    <img src="https://storage.googleapis.com/pasarmalamdublin/blog_pics/{{post.picture}}" width="100%">
+
+    <h1>{{ post.title }}</h1>
+
+      📝By:<a href="{{ url_for('user_posts', username=post.author.username) }}" class="btn btn-sm btn-secondary">{{post.author.username }}</a>
+
+    <br><br>
+    <pre style="white-space: pre-wrap"><p>{{post.text}}</p></pre>
+
+    📍<p>{{post.location}}</p>
+    
+      <a href="https://wa.me/{{post.contact}}?text=From%20PasarMalamDublin. {{post.title}}" target="blank">Call <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-whatsapp" style="font-size:100px;color:green"></i></button>Now</a>
+      <br><br>
+
+
+
+          <span id="likes-count-{{post.id}}">{{ post.likes|length }}</span> 
+                  
+                  {% if current_user.id in post.likes|map(attribute="author")|list %}
+                  <i
+                    class="fas fa-thumbs-up"
+                    id="like-button-{{post.id}}"
+                    onclick="like({{post.id}})"
+                    style="cursor: pointer;"
+                  ></i>
+                  {% else %}
+                  <i
+                    class="far fa-thumbs-up"
+                    id="like-button-{{post.id}}"
+                    onclick="like({{post.id}})"
+                    style="cursor: pointer;"
+                  ></i>
+                  {% endif %}
+
+
+          <script type="text/javascript">
+            
+          function like(postId) {
+            const likeCount = document.getElementById(`likes-count-${postId}`);
+            const likeButton = document.getElementById(`like-button-${postId}`);
+
+            fetch(`/like-post/${postId}`, { method: "POST" })
+              .then((res) => res.json())
+              .then((data) => {
+                likeCount.innerHTML = data["likes"];
+                if (data["liked"] === true) {
+                  likeButton.className = "fas fa-thumbs-up";
+                } else {
+                  likeButton.className = "far fa-thumbs-up";
+                }
+              })
+              .catch((e) => alert("Could not like post. You need to login."));
+          }
+          </script>
+
+
+
+
+
+
+
+
+   {% if post.author == current_user %}
+     <div>
+       <a class="btn btn-secondary" href="{{ url_for('update', blog_post_id=post.id) }}">Update</a>
+       <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#del_modal">Delete</button>
+     </div>
+   {% endif %}
+
+  </div>
+</div>
+
+
+
+
+  <!-- Modal for delte and update Pop Up-->
+  {# https://getbootstrap.com/docs/4.1/components/modal/ #}
+  {# Notice how the link with the id to the button above! #}
+  <div class="modal" tabindex="-1" role="dialog" id="del_modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Post Pop up Modal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this blog post?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
+          <form action="{{ url_for('delete_post', blog_post_id=post.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+      <div class=" container jumbotron">
+        <form class="form-group" method="POST">
+           {{ form.hidden_tag() }}
+             <div class="form-group">
+               <h1>{{ form.text.label(class="form-control-label") }}
+               {{ form.text(class="form-control form-control-lg ", placeholder="sila kasi komen anda",maxlength="200") }}
+               </h1>
+             </div>
+          <br>
+          <div class=" form-group">
+               {{ form.submit(class="btn btn-outline-info") }}
+          </div>
+        </form>
+
+
+
+            {% for comment in post.comments %}
+            <div>
+                {% if comment.user!= None %}
+                  <b>{{comment.user.username}}</b>:  
+              
+                  {% else %}
+                  Anon: 
+
+                {% endif %}
+
+
+              {{comment.text}}
+              <small style="background-color:#28282B;color:white;padding: 3px">{{comment.date_created.strftime('%Y-%m-%d, %H:%M')}}</small>
+            
+            </div>
+            {% endfor %}
+
+      </div>
+
+
+
+
+
+<style type="text/css">
+  
+.jumbotron{
+
+    background-image: url('');
+    background-size: cover;
+    background-position:center center ;
+    padding: 20px;
+}
+
+
+
+.loginform{
+background: rgba( 255, 255, 255, 0.51 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+
+max-width: 500px;
+margin: auto;
+
+}
+
+.form-control{
+    max-width: 250px;
+    margin: auto;
+    height: 50px;
+}
+
+</style>
+
+
+{% endblock content %}

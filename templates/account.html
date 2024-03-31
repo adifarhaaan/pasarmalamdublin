@@ -1,0 +1,71 @@
+{% extends "template.html" %}
+{% block content %}
+  <title>User Account</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BR9L8C0659"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BR9L8C0659');
+</script>
+
+
+<br>
+
+  <div class="jumbotron">
+
+<div class="container myaccount">
+  <form  method="POST" action = "" enctype="multipart/form-data">
+    <h1>Welcome, {{current_user.username}}</h1>
+    <img align='center' src="https://storage.googleapis.com/pasarmalamdublin/profile_pics/{{current_user.profile_image}}">
+
+    <div class="form-group">
+      <p>{{ form.picture.label(class="form-group") }}</p>
+      {{ form.picture(class="form-control-file") }}
+    </div>
+
+    <p>{{ current_user.email }}</p>
+  </div>
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      <p>{{ form.username.label(class="form-group") }}</p>
+      {{form.username(class='form-control')  }}
+    </div>
+    <div class="form-group">  
+      <p>{{ form.email.label(class="form-group") }}</p>
+      {{form.email(class='form-control')  }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+  </form>
+
+
+
+</div>
+
+
+
+<style type="text/css">
+  .jumbotron h1, p{
+    color: black;
+  }
+
+  .container p {
+    color: black;
+  }
+
+.myaccount {
+    max-width: 500px;
+    margin: auto;
+  
+}
+
+  .jumbotron{
+    max-width: 800px;
+    margin: auto;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "template.html" %}
+{% block content %}
+
+  <title>Login</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BR9L8C0659"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BR9L8C0659');
+</script>
+
+
+<div class="loginbackground">
+    <div class="loginform">
+        <h1>VENDOR LOGIN</h1>
+        <form method="POST">
+            {# This hidden_tag is a CSRF security feature. #}
+            {{ form.hidden_tag() }}
+            
+            <h2>{{ form.username.label }} {{ form.username(class_="form-control", placeholder="enter username") }}</h2>
+            <h2>{{ form.password.label }} {{ form.password(class_="form-control", placeholder="enter password") }}</h2>
+            
+            {{ form.submit() }}
+        </form>
+
+
+        <br>
+        <h2 style="color:white">New user? Register <a style="color: red;" href="/register"><b>HERE</b></a></h2>
+
+    </div>
+</div>
+
+<style type="text/css">
+
+
+.loginbackground{
+
+    background-image: url('https://tropicalwarehouse.co.uk/blog/wp-content/uploads/2021/10/dan-freeman-G4E6PcOt4Ps-unsplash-1.jpg');
+    background-size: cover;
+    background-position:center center ;
+    padding: 20px;
+}
+
+
+
+.loginform{
+background: rgba( 255, 255, 255, 0.25 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+max-width: 500px;
+margin: auto;
+
+}
+
+.form-control{
+    max-width: 250px;
+    margin: auto;
+    height: 50px;
+}
+
+</style>
+
+{% endblock %}
